@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة المتر الطولي وتكلفة المواد</title>
+    <style>
+        :root { --primary: #27ae60; --dark: #2c3e50; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { color: var(--dark); text-align: center; border-bottom: 3px solid var(--primary); padding-bottom: 10px; margin-top: 0; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--dark); }
+        input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; }
+        button { width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background-color: #219150; transform: translateY(-2px); }
+        .results { margin-top: 25px; display: none; border-top: 2px dashed #ddd; padding-top: 20px; }
+        .res-box { background: #f0fdf4; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+        .item:last-child { border-bottom: none; }
+        .label-text { color: #555; }
+        .val-text { font-weight: bold; color: var(--dark); }
+        .total-price { font-size: 1.4em; color: #e67e22; text-align: center; margin-top: 15px; padding: 10px; background: #fff3e0; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>حاسبة المتر والتكلفة</h2>
+    
+    <div class="input-group">
+        <label>طول الغرفة (متر):</label>
+        <input type="number" id="L" placeholder="الطول" step="0.1">
+    </div>
+    
+    <div class="input-group">
+        <label>عرض الغرفة (متر):</label>
+        <input type="number" id="W" placeholder="العرض" step="0.1">
+    </div>
+    
+    <button onclick="calculateAll()">احسب الآن</button>
+
+    <div id="results" class="results">
+        <div class="res-box">
+            <div class="item"><span class="label-text">المتر الطولي (المحيط):</span> <span class="val-text" id="res-meter">0</span> متر طولي</div>
+        </div>
+
+        <div class="res-box">
+            <div class="item"><span class="label-text">الجبسنبورد (9,000 د.ع):</span> <span class="val-text" id="res-b-qty">0</span></div>
+            <div class="item"><span class="label-text">الزاوية (1,000 د.ع):</span> <span class="val-text" id="res-a-qty">0</span></div>
+            <div class="item"><span class="label-text">الچنل (2,750 د.ع):</span> <span class="val-text" id="res-c-qty">0</span></div>
+        </div>
+
+        <div class="total-price">
+            إجمالي سعر المواد: <br>
+            <strong id="res-total">0</strong> دينار عراقي
+        </div>
+        <p style="font-size: 11px; color: #888; text-align: center; margin-top: 10px;">* الحساب يشمل قطعة جبس واحدة إضافية احتياط.</p>
+    </div>
+</div>
+
+<script>
+    function calculateAll() {
+        const length = parseFloat(document.getElementById('L').value);
+        const width = parseFloat(document.getElementById('W').value);
+
+        if (!length || !width) {
+            alert("يرجى إدخال القياسات أولاً");
+            return;
+        }
+
+        // 1. حساب المتر الطولي (المحيط)
+        const perimeter = (length + width) * 2;
+
+        // 2. حساب الكميات (بناءً على القواعد الذهبية)
+        const boardsQty = Math.ceil(perimeter / 4.5) + 1; // زيادة قطعة واحدة
+        const anglesQty = Math.ceil(perimeter / 1.5);
+        const channelsQty = Math.ceil(perimeter / 2);
+
+        // 3. حساب الأسعار
+        const priceBoards = boardsQty * 9000;
+        const priceAngles = anglesQty * 1000;
+        const priceChannels = channelsQty * 2750;
+        const totalPrice = priceBoards + priceAngles + priceChannels;
+
+        // 4. عرض النتائج
+        document.getElementById('res-meter').innerText = perimeter.toFixed(2);
+        document.getElementById('res-b-qty').innerText = boardsQty + " قطعة";
+        document.getElementById('res-a-qty').innerText = anglesQty + " قطعة";
+        document.getElementById('res-c-qty').innerText = channelsQty + " قطعة";
+        document.getElementById('res-total').innerText = totalPrice.toLocaleString();
+
+        document.getElementById('results').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
